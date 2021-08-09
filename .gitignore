@@ -133,6 +133,7 @@ dmypy.json
 *.xml
 *.record
 *.v2
+*.dat
 
 Tensorflow/workspace/models/my_ssd_mobnet/20k variable background/*
 Tensorflow/workspace/models/my_ssd_mobnet/OldTrainResults/*

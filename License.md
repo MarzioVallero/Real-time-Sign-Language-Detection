@@ -1,6 +1,6 @@
 MIT License
 
-Copyright (c) [2021] [Real-time Sign Language Detection]
+Copyright (c) 2021 Angela D'Antonio, Federica Moro, Marzio Vallero
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal

@@ -1,0 +1,11 @@
+IMPORTING GUIDE FOR dlib ON WINDOWS
+
+For additional info check info: https://github.com/Asadullah-Dal17/Eyes-Tracking-Opencv-and-Dlib
+
+On a shell, run the following commands:
+pip install cmake
+pip install wheel
+pip install dlib
+
+For the program to run, the project directory must contain the file "shape_predictor_68_face_landmarks.dat",
+which can be downloaded from http://dlib.net/files/shape_predictor_68_face_landmarks.dat.bz2
