@@ -128,6 +128,11 @@ dmypy.json
 # Pyre type checker
 .pyre/
 
-# Ignore images
+# Ignore useless things
 *.jpg
 *.xml
+*.record
+*.v2
+
+Tensorflow/workspace/models/my_ssd_mobnet/20k variable background/*
+Tensorflow/workspace/models/my_ssd_mobnet/OldTrainResults/*
