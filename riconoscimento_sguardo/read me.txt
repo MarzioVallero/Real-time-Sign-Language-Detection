@@ -1,0 +1,13 @@
+GUIDA ALL'IMPORTAZIONE E ALL'INSTALLAZIONE DELLA LIBRERIA dlib SU WINDOWS
+
+Per maggiori info: https://github.com/Asadullah-Dal17/Eyes-Tracking-Opencv-and-Dlib
+
+1. Aprire il prompt dei comandi
+2. scrivere "pip install cmake" e aspettare il completamento dell'operazione
+3*. questo passaggio dipende dal fatto che si abbia o meno wheel
+    scrivere "pip install wheel" e aspettare il completamento dell'operazione
+4. scrivere "pip install dlib" e aspettare il completamento dell'operazione
+
+
+!!!! Affinché il programma funzioni, è importante che nella cartella del progetto ci sia una copia del file "shape_predictor_68_face_landmarks.dat"
+
