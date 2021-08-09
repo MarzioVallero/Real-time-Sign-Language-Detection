@@ -34,7 +34,7 @@ When not specifically stated, all shell commands should be run from the root dir
 
 To generate the dataset to be used to train a model, refer to the Jupyter notebook [GenerateDataset.ipynb](GenerateDataset.ipynb)
 
-To label the dataset images, refer to the Jupyter notebook [LabelDataset.ipynb](LabelDataset.ipynb)
+To label the dataset images and train the model, refer to the Jupyter notebook [LabelDataset.ipynb](LabelDatasetAndTrain.ipynb)
 
 To run the sign detection algorithm, either refer to the Jupyter notebook [SignDetection.ipynb](SignDetection.ipynb), or run the python script using the shell command:
 ```bash
