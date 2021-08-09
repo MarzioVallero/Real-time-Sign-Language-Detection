@@ -17,6 +17,10 @@ For installing Jupyter Notebook, use the shell command:
 ```bash
 pip install notebook
 ```
+Be sure to activate the local server necessary to run jupyter notebooks, using the shell command:
+```bash
+jupyter notebook
+```
 
 For installing Tensorflow, required to train the neural network, I suggest to check out the official guide:
 [Tensorflow installation](https://www.tensorflow.org/install)
@@ -28,11 +32,11 @@ For installing LabelImg and learning how to use it, I suggest the GitHub reposit
 
 When not specifically stated, all shell commands should be run from the root directory of the project.
 
-To generate the dataset to be used to train a model, refer to the Jupyter notebook GenerateDataset.ipynb
+To generate the dataset to be used to train a model, refer to the Jupyter notebook [GenerateDataset.ipynb](GenerateDataset.ipynb)
 
-To label the dataset images, refer to the Jupyter notebook LabelDataset.ipynb
+To label the dataset images, refer to the Jupyter notebook [LabelDataset.ipynb](LabelDataset.ipynb)
 
-To run the program either refer to the Jupyter notebook SignDetection.ipynb, or run the python script using the shell command:
+To run the sign detection algorithm, either refer to the Jupyter notebook [SignDetection.ipynb](SignDetection.ipynb), or run the python script using the shell command:
 ```bash
 python SignDetection.py
 ```
@@ -45,4 +49,4 @@ Contribution to the project is welcome, although the project won't be maintained
 The project has been developed by Angela D'Antonio, Federica Moro and Marzio Vallero as part of the Computer Engineering Masters exam "Image Processing and Computer Vision", taught by professors B. Montrucchio and L. De Russis, during the academic year 2020/2021 at the Polythecnic of Turin.
 
 ## License
-For right to use, copyright and warranty of this software, refer to the file License.md
+For right to use, copyright and warranty of this software, refer to the file [License.md](License.md)
