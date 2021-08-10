@@ -41,7 +41,6 @@ while True:
         cv2.polylines(mask, [left_eye_region], True, 255, 2) # bordo occhio
         cv2.fillPoly(mask, [left_eye_region], 255) # riempimento occhio
 
-
         # vogliamo isolare l'occhio
 
         # usando le maschere, isoliamo solo la parte dell'occhio
@@ -57,7 +56,7 @@ while True:
         eye = frame[min_y: max_y, min_x: max_x]
         # rendo l'occhio in bianco e nero per poi fare il thresholding
         gray_eye = cv2.cvtColor(eye, cv2.COLOR_BGR2GRAY)
-        _, threshold_eye = cv2.threshold(gray_eye, 50, 255, cv2.THRESH_BINARY) # thresholding tra 50 e 255
+        _, threshold_eye = cv2.threshold(gray_eye, 70, 255, cv2.THRESH_BINARY) # thresholding tra 50 e 255
 
         # divido il threshold in parte sinistra e destra
         height, width = threshold_eye.shape
@@ -79,22 +78,23 @@ while True:
         gaze_ratio = left_side_white/right_side_white
 
         # stampe usate per verificare sperimentalmente i valori per left, center e rigth
-        # cv2.putText(frame, str(left_side_white), (50, 100), font, 2, (0, 0, 255), 3)
-        # cv2.putText(frame, str(right_side_white), (50, 150), font, 2, (0, 0, 255), 3)
-        # cv2.putText(frame, str(gaze_ratio), (50, 200), font, 2, (0, 0, 255), 3)
+        cv2.putText(frame, str(left_side_white), (50, 100), font, 2, (0, 0, 255), 3)
+        cv2.putText(frame, str(right_side_white), (50, 150), font, 2, (0, 0, 255), 3)
+        cv2.putText(frame, str(gaze_ratio), (50, 200), font, 2, (0, 0, 255), 3)
 
-        if gaze_ratio <= 0.50:
+        if gaze_ratio <= 0.91:
             cv2.putText(frame, "RIGHT", (400, 100), font, 2, (0, 0, 255), 3)
         # new_frame[:] = (0, 0, 255)
-        elif 0.50 < gaze_ratio < 0.86:
+        elif 0.91 < gaze_ratio < 1.1:
             cv2.putText(frame, "CENTER", (400, 100), font, 2, (0, 0, 255), 3)
         else:
             # new_frame[:] = (255, 0, 0)
             cv2.putText(frame, "LEFT", (400, 100), font, 2, (0, 0, 255), 3)
 
-        # cv2.imshow("EYE", eye)
-        #  cv2.imshow("EYE_threshold", threshold_eye)
-        # cv2.imshow("mask", mask)
+        cv2.imshow("EYE", eye)
+        threshold_eye=cv2.resize(threshold_eye, None, fx=10, fy=10)
+        cv2.imshow("EYE_threshold", threshold_eye)
+        cv2.imshow("mask", mask)
 
     cv2.imshow("Frame", frame)
 

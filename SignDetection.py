@@ -10,6 +10,8 @@ from object_detection.builders import model_builder
 import cv2 
 import numpy as np
 from IPython.display import clear_output
+import tkinter as tk
+import ast
 
 # Computes the detections from the predictive model
 @tf.function
@@ -40,9 +42,23 @@ category_index = label_map_util.create_category_index_from_labelmap(ANNOTATION_P
 cap = cv2.VideoCapture(0)
 width = int(cap.get(cv2.CAP_PROP_FRAME_WIDTH))
 height = int(cap.get(cv2.CAP_PROP_FRAME_HEIGHT))
+root = tk.Tk()
+screen_width = root.winfo_screenwidth()
+screen_height = root.winfo_screenheight()
+
+# Check if a configuration file exists, else load a predefined value set
+if os.path.isfile('Config\config.dat'):
+    print("Configuration file found\n")
+    file = open("Config\config.dat", "r")
+    contents = file.read()
+    config = ast.literal_eval(contents)
+    file.close()
+else:
+    print ("Configuration file not found\n")
+    config = {'HL': 0, 'SL': 29, 'VL': 24, 'HH': 40, 'SH': 255, 'VH': 255}
 
 # Camera loop
-while True: 
+while cap.isOpened(): 
     ret, frame = cap.read()
     image_np = np.array(frame)
     
@@ -50,9 +66,8 @@ while True:
     # The frame is converted to HSV, then thresholded according to the Hue value
     # according to the paper: http://citeseerx.ist.psu.edu/viewdoc/download?doi=10.1.1.718.1964&rep=rep1&type=pdf
     HSV_Frame = cv2.cvtColor(frame, cv2.COLOR_BGR2HSV)
-    Hue,Sat,Val = [HSV_Frame[...,i] for i in range(3)]
-    HSV_res = np.logical_or(Hue < 35, Hue > 140)
-    totalMask = HSV_res.astype(np.uint8)
+    totalMask = cv2.inRange(HSV_Frame, (config["HL"], config["SL"], config["VL"]), (config["HH"], config["SH"], config["VH"]))
+    totalMask = totalMask.astype(np.uint8)
     
     # Face removal, in order to give less room for error to the gesture classifier
     # A Haar classifier detects the face, then adds its filled bounding box to the mask
@@ -102,6 +117,5 @@ while True:
     
     if cv2.waitKey(1) & 0xFF == ord('q'):
         cap.release()
-        cv2.destroyWindow('object detection')
-        #cv2.destroyWindow('Masked image')
+        cv2.destroyAllWindows()
         break

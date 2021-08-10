@@ -67,7 +67,7 @@ def blob_process(img, threshold, detector):
     img = cv2.dilate(img, None, iterations=4)
     img = cv2.medianBlur(img, 5)
     keypoints = detector.detect(img)
-    print(keypoints)
+    #print(keypoints)
     return keypoints
 
 #void function for the trackbar
@@ -91,6 +91,9 @@ def main():
                     keypoints = blob_process(eye, threshold, detector)
                     eye = cv2.drawKeypoints(eye, keypoints, eye, (0, 0, 255), cv2.DrawMatchesFlags_DRAW_RICH_KEYPOINTS)
         cv2.imshow('image', frame)
+        
+
+        cv2.imshow('tmp', tmp)
         if cv2.waitKey(1) & 0xFF == ord('q'):
             break
     cap.release()
