@@ -80,7 +80,8 @@ class IrisLocalizationModel():
         pupil = pupil.astype(int)
         radius = int(max(radius))
 
-        cv2.circle(frame, tuple(pupil), radius, color, thickness, cv2.LINE_AA)
+        # Moved to SignDetection.py for debugging purposes
+        # cv2.circle(frame, tuple(pupil), radius, color, thickness, cv2.LINE_AA)
 
         return pupil, radius
 
