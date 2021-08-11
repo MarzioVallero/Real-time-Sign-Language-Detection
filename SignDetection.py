@@ -23,6 +23,10 @@ import numpy as np
 from IPython.display import clear_output
 import tkinter as tk
 import ast
+import matplotlib
+matplotlib.use('Qt5Agg')
+import matplotlib.pyplot as plt
+from PyQt5 import QtGui
 
 # Computes the detections from the predictive model
 @tf.function
@@ -93,6 +97,8 @@ def draw_sticker(src, offset, pupils, landmarks,
 
     return src
 
+def handle_close(event, cap):
+    cap.release()
 
 args = sys.argv[1:]
 if(len(args) == 0):
@@ -109,6 +115,7 @@ MODEL_PATH = WORKSPACE_PATH+'/models'
 PRETRAINED_MODEL_PATH = WORKSPACE_PATH+'/pre-trained-models'
 CONFIG_PATH = MODEL_PATH+'/my_ssd_mobnet/pipeline.config'
 CHECKPOINT_PATH = MODEL_PATH+'/my_ssd_mobnet/'
+PATH_TO_ICON = os.path.dirname(__file__) + '/Externals/icons/politoIcon.ico'
 SIN_LEFT_THETA = 2 * sin(pi / 4)
 SIN_UP_THETA = sin(pi / 6)
 
@@ -129,6 +136,14 @@ root = tk.Tk()
 screen_width = root.winfo_screenwidth()
 screen_height = root.winfo_screenheight()
 
+# Setup output window
+plt.ion()
+gui = plt.figure("Real-time Sign Detection")
+gui.canvas.mpl_connect("close_event", lambda event: handle_close(event, cap))
+result = None
+plt.get_current_fig_manager().window.setWindowIcon(QtGui.QIcon(PATH_TO_ICON))
+
+# Setup Gaze recognition models
 fd = MxnetDetectionModel("Externals/weights/16and32", 0, .6, gpu=-1)
 fa = CoordinateAlignmentModel('Externals/weights/2d106det', 0, gpu=-1)
 gs = IrisLocalizationModel("Externals/weights/iris_landmark.tflite")
@@ -273,10 +288,20 @@ while cap.isOpened():
                     agnostic_mode=False)
 
     # The output is displayed on an interactive window
-    cv2.imshow('object detection',  image_np)
+    #cv2.imshow('object detection',  image_np)
     #cv2.imshow('Masked image', output)
+
+    image_np = cv2.cvtColor(image_np, cv2.COLOR_BGR2RGB)
+    if result is None:
+        result = plt.imshow(image_np)
+        plt.title("Real-time Sign Detection")
+        plt.show() 
+    else:
+        result.set_data(image_np)
+        gui.canvas.draw()
+        gui.canvas.flush_events()
     
     if cv2.waitKey(1) & 0xFF == ord('q'):
         cap.release()
-        cv2.destroyAllWindows()
+        plt.close('all')
         break
