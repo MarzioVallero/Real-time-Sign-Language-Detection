@@ -306,5 +306,6 @@ while cap.isOpened():
     
     if cv2.waitKey(1) & 0xFF == ord('q'):
         cap.release()
+        gui.canvas.flush_events()
         plt.close('all')
         break

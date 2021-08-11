@@ -4,6 +4,11 @@ from IPython.display import clear_output
 import tkinter as tk
 import ast
 import os
+import matplotlib
+matplotlib.use('Qt5Agg')
+import matplotlib.pyplot as plt
+from matplotlib.widgets import RangeSlider
+from PyQt5 import QtGui
 
 def GUIHandle(x): #needed for createTrackbar to work in python.
     pass 
@@ -27,33 +32,34 @@ else:
     print ("Configuration file not found\n")
     config = {'HL': 0, 'SL': 29, 'VL': 24, 'HH': 40, 'SH': 255, 'VH': 255}
 
-# Create the Instructions window
-cv2.namedWindow('Instructions', flags=cv2.WINDOW_AUTOSIZE)
-cv2.resizeWindow('Instructions', 400, height-320)
-cv2.moveWindow('Instructions', int(0.5*screen_width)-int(0.5*400), int(0.5*screen_height)-int(0.5*400)+320)
-instr = np.zeros((height-320, 400))
-cv2.putText(instr, 'Use E to confirm', (60, 60), cv2.FONT_HERSHEY_SIMPLEX, 1, (50, 50, 50), 2, cv2.LINE_AA)
-cv2.putText(instr, 'Use Q to exit', (90, 110), cv2.FONT_HERSHEY_SIMPLEX, 1, (50, 50, 50), 2, cv2.LINE_AA)
-cv2.imshow('Instructions', instr)
+# Window close handler
+def handle_close(event, cap):
+    cap.release()
 
-# Create the Camera window
-cv2.namedWindow('Camera', flags=cv2.WINDOW_AUTOSIZE)
-cv2.moveWindow('Camera', int(0.5*screen_width)-int(0.5*400)-width, int(0.5*screen_height)-int(0.5*400))
+# Setup window
+PATH_TO_ICON = os.path.dirname(__file__) + '/Externals/icons/politoIcon.ico'
+plt.ion()
+imageWin = None
+fig, (ax1, ax2) = plt.subplots(1, 2, figsize=(10, 5))
+plt.subplots_adjust(bottom=0.25)
+fig.canvas.mpl_connect("close_event", lambda event: handle_close(event, cap))
+plt.get_current_fig_manager().window.setWindowIcon(QtGui.QIcon(PATH_TO_ICON))
+plt.get_current_fig_manager().set_window_title('HSV Custom Profile Generator')
+title_obj = plt.title('HSV Custom Profile Generator')
+plt.setp(title_obj, color='#d4d4d4')
+fig.patch.set_facecolor('#1e1e1e')
+fig.patch.set_edgecolor('#1e1e1e')
 
-# Create the Thresholded image output window
-cv2.namedWindow('Threshold', flags=cv2.WINDOW_AUTOSIZE)
-cv2.moveWindow('Threshold', int(0.5*screen_width)+int(0.5*400), int(0.5*screen_height)-int(0.5*400))
-
-# Create the Trackbar needed to perform manual configuration
-cv2.namedWindow('Trackbar', flags=cv2.WINDOW_AUTOSIZE)
-cv2.resizeWindow('Trackbar', 400, 320)
-cv2.moveWindow('Trackbar', int(0.5*screen_width)-int(0.5*400), int(0.5*screen_height)-int(0.5*400))
-cv2.createTrackbar('Hue Low', 'Trackbar', config["HL"], 255, GUIHandle)
-cv2.createTrackbar('Sat Low', 'Trackbar', config["SL"], 255, GUIHandle)
-cv2.createTrackbar('Val Low', 'Trackbar', config["VL"], 255, GUIHandle)
-cv2.createTrackbar('Hue High', 'Trackbar', config["HH"], 255, GUIHandle)
-cv2.createTrackbar('Sat High', 'Trackbar', config["SH"], 255, GUIHandle)
-cv2.createTrackbar('Val High', 'Trackbar', config["VH"], 255, GUIHandle)
+# Create the RangeSliders
+sliderAxHue = plt.axes([0.20, 0.2, 0.60, 0.03])
+sliderHue = RangeSlider(sliderAxHue, "Hue", valmin=0, valmax=255, valstep = 1)
+sliderHue.set_val((config["HL"], config["HH"]))
+sliderAxSat = plt.axes([0.20, 0.15, 0.60, 0.03])
+sliderSat = RangeSlider(sliderAxSat, "Sat", valmin=0, valmax=255, valstep = 1)
+sliderSat.set_val((config["SL"], config["SH"]))
+sliderAxVal = plt.axes([0.20, 0.1, 0.60, 0.03])
+sliderVal = RangeSlider(sliderAxVal, "Val", valmin=0, valmax=255, valstep = 1)
+sliderVal.set_val((config["VL"], config["VH"]))
 
 # Calibration loop
 while cap.isOpened(): 
@@ -61,36 +67,48 @@ while cap.isOpened():
     
     # Convert the frame to HSV and read trackbar inputs
     hsv = cv2.cvtColor(frame,cv2.COLOR_BGR2HSV)
-    config["HL"] = cv2.getTrackbarPos('Hue Low', 'Trackbar')
-    config["SL"] = cv2.getTrackbarPos('Sat Low', 'Trackbar')
-    config["VL"] = cv2.getTrackbarPos('Val Low', 'Trackbar')
-    config["HH"] = cv2.getTrackbarPos('Hue High', 'Trackbar')
-    config["SH"] = cv2.getTrackbarPos('Sat High', 'Trackbar')
-    config["VH"] = cv2.getTrackbarPos('Val High', 'Trackbar')
-    
-    # Lock sliders so that they cannot invert
-    if (config["HL"] > config["HH"]):
-        cv2.setTrackbarPos('Hue Low', 'Trackbar', config["HH"])
-    if (config["SL"] > config["SH"]):
-        cv2.setTrackbarPos('Sat Low', 'Trackbar', config["SH"])
-    if (config["VL"] > config["VH"]):
-        cv2.setTrackbarPos('Val Low', 'Trackbar', config["VH"])
+    frame = cv2.cvtColor(frame,cv2.COLOR_BGR2RGB)
+
+    # Read RangeSliders' values
+    config["HL"] = int(sliderHue.val[0])
+    config["HH"] = int(sliderHue.val[1])
+    config["SL"] = int(sliderSat.val[0])
+    config["SH"] = int(sliderSat.val[1])
+    config["VL"] = int(sliderVal.val[0])
+    config["VH"] = int(sliderVal.val[1])
     
     # Perform thresholding according to the specified values
     thresh = cv2.inRange(hsv, (config["HL"], config["SL"], config["VL"]), (config["HH"], config["SH"], config["VH"]))
     
+    # Force redraw
+    fig.canvas.draw_idle()
+
     # Show images
-    cv2.imshow('Camera', frame)
-    cv2.imshow('Threshold', thresh)
+    if imageWin is None:
+        plt.subplot(1, 2, 1).axis("off")
+        imageWin = plt.imshow(frame, "gray")
+        title_obj = plt.title("Original Frame")
+        plt.setp(title_obj, color='#d4d4d4')
+        plt.subplot(1, 2, 2).axis("off")
+        threshWin = plt.imshow(thresh, "gray")
+        title_obj = plt.title("Thresholded Frame")
+        plt.setp(title_obj, color='#d4d4d4')
+        plt.show()
+    else:
+        imageWin.set_data(frame)
+        threshWin.set_data(thresh)
+        fig.canvas.draw()
+        fig.canvas.flush_events() 
     
     if cv2.waitKey(1) & 0xFF == ord('q'):
         cap.release()
-        cv2.destroyAllWindows()
+        plt.close('all')
         break
     elif cv2.waitKey(1) & 0xFF == ord('e'):
+        cap.release()
         file = open("Config\config.dat", "w")
         configToStr = repr(config)
         file.write(configToStr + "\n")
         file.close()
-        cv2.destroyAllWindows()
+        plt.close('all')
         break
