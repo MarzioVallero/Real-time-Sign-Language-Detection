@@ -10,7 +10,7 @@ The version of Python used is Python 3.9.6, which can be installed following thi
 
 The version of OpenCV used for this project is version 4.5.3, which can be installed using the shell command:
 ```bash
-pip install opencv-python
+pip install opencv-python==4.5.3
 ```
 
 For installing Jupyter Notebook, use the shell command:
