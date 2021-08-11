@@ -1,0 +1,83 @@
+\documentclass[a4paper, 12pt]{report}
+
+%%%%%%%%%%%%
+% Packages %
+%%%%%%%%%%%%
+
+\usepackage[english]{babel}
+\usepackage[noheader]{packages/sleek}
+\usepackage{packages/sleek-title}
+\usepackage{packages/sleek-theorems}
+\usepackage{packages/sleek-listings}
+\usepackage{verbatim}
+
+\usepackage{longtable}
+
+
+%%%%%%%%%%%%%%
+% Title-page %
+%%%%%%%%%%%%%%
+
+\logo{./resources/image/logo.png}
+\institute{Polytechnic of Turin}
+\faculty{Computer engineering}
+\department{Engineering}
+\title{Title}
+\subtitle{Course of Computer Vision and Image Processing}
+\author{\textit{s281657}\\Angela \textsc{D'Antonio}\\
+        \textit{s281330}\\Federica \textsc{Moro}\\
+        \textit{s286312}\\Marzio \textsc{Vallero}}
+
+\supervisor{Bartolomeo \textsc{Montrucchio}\\
+            Luigi     \textsc{De Russis}}
+
+\date{a.y. 2020/2021}
+
+%%%%%%%%%%%%%%%%
+% Bibliography %
+%%%%%%%%%%%%%%%%
+
+%%%%%%%%%%
+% Others %
+%%%%%%%%%%
+\lstdefinestyle{latex}{
+    language=TeX,
+    style=default,
+    %%%%%
+    commentstyle=\ForestGreen,
+    keywordstyle=\TrueBlue,
+    stringstyle=\VeronicaPurple,
+    emphstyle=\TrueBlue,
+    %%%%%
+    emph={LaTeX, usepackage, textit, textbf, textsc}
+}
+
+\FrameTBStyle{latex}
+
+\def\tbs{\textbackslash}
+
+\usepackage[nottoc]{tocbibind}
+
+%%%%%%%%%%%%
+% Document %
+%%%%%%%%%%%%
+
+
+\begin{document}
+\maketitle
+\romantableofcontents
+
+\chapter{Introduzione}
+\section{Section 1}
+
+
+
+
+
+\begin{figure}[h]
+    \centering
+    \includegraphics[width=0.5\textwidth]{resources/image/logo.png} \caption{Logo del Politecnico} \label{fig:logo}
+\end{figure}
+
+
+\end{document}
