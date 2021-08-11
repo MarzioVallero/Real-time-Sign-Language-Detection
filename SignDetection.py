@@ -138,10 +138,12 @@ screen_height = root.winfo_screenheight()
 
 # Setup output window
 plt.ion()
-gui = plt.figure("Real-time Sign Detection")
+gui = plt.figure("Real-time Sign Detection", facecolor='#1e1e1e', edgecolor='#1e1e1e')
 gui.canvas.mpl_connect("close_event", lambda event: handle_close(event, cap))
 result = None
 plt.get_current_fig_manager().window.setWindowIcon(QtGui.QIcon(PATH_TO_ICON))
+title_obj = plt.title('Real-time Sign Detection')
+plt.setp(title_obj, color='#d4d4d4')         #set the color of title to white
 
 # Setup Gaze recognition models
 fd = MxnetDetectionModel("Externals/weights/16and32", 0, .6, gpu=-1)
@@ -293,6 +295,7 @@ while cap.isOpened():
 
     image_np = cv2.cvtColor(image_np, cv2.COLOR_BGR2RGB)
     if result is None:
+        plt.axis("off")
         result = plt.imshow(image_np)
         plt.title("Real-time Sign Detection")
         plt.show() 
