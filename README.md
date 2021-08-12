@@ -63,7 +63,9 @@ The script recognizes all the letters in the standard Italian alphabet, plus fou
 - space: Do an "A" gesture followed by an "S" gesture. Simply quicky move your thumb out from the A position. Appends a space to the active string buffer.
 - delete: Do a "V" gesture followed by a "U" gesture. Similar to the metaphorical action of "cutting". Deletes the last character in the active string buffer.
 - clear: Do an "E" gesture followed by an "A" gesture. Similar to the action of crushing something with your hand. Deletes all the characters in the active string buffer.
-- enter: Do a "D" gesture followed by an "O" gesture. Similar to the action of clicking a camera's shutter button. Prints the active string buffer to stdout, then deletes all the characters in the active string buffer.
+- enter: Do a "D" gesture followed by an "O" gesture. Similar to the action of clicking a camera's shutter button. Prints the active string buffer to stdout, then deletes all the characters in the active string buffer.  
+
+![Italian Sign Language](Externals/Images/Italian-Sign-Language.png "Italian Sign Language")
 
 Moreover, the [SignDetection.ipynb](SignDetection.ipynb) can be run passing as argument "--Debug", which inserts in the output frames the facial feature recognition dots, eye circles and gaze direction vectors:
 ```bash
