@@ -3,6 +3,9 @@
 Real-time Sign Language Detection is a Python based project that provides all the steps required to produce the dataset required to train a nural network, train it and later use it for gesture recognition in real-time.
 The input of gestures is only considered valid if a face is detected withing the image frame containing the gesture, else the input is ignored.
 
+Here's a quick demo of the SignDetection.py script:  
+https://user-images.githubusercontent.com/73691795/129217755-e0e2e49b-19cd-46df-ad59-bc2dc5acc473.mp4
+
 ## Installation
 
 The version of Python used is Python 3.9.6, which can be installed following this guide:
