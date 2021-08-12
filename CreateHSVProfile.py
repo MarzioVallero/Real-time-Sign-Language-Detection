@@ -10,8 +10,24 @@ import matplotlib.pyplot as plt
 from matplotlib.widgets import RangeSlider
 from PyQt5 import QtGui
 
-def GUIHandle(x): #needed for createTrackbar to work in python.
-    pass 
+# Window close handler
+def handle_close(event, cap):
+    cap.release()
+
+# Keyboard interrupt handler
+def on_press(event):
+    if event.key == 'q':
+        print("You pressed " + event.key + ", the program exited without saving")
+        cap.release()
+        plt.close('all')
+    elif event.key == 'e':
+        print("You pressed " + event.key + ", the program saved and exited")
+        cap.release()
+        file = open("Config\config.dat", "w")
+        configToStr = repr(config)
+        file.write(configToStr + "\n")
+        file.close()
+        plt.close('all')
 
 # Setup camera capture
 cap = cv2.VideoCapture(0)
@@ -30,11 +46,7 @@ if os.path.isfile('Config\config.dat'):
     file.close()
 else:
     print ("Configuration file not found\n")
-    config = {'HL': 0, 'SL': 29, 'VL': 24, 'HH': 40, 'SH': 255, 'VH': 255}
-
-# Window close handler
-def handle_close(event, cap):
-    cap.release()
+    config = {'HL': 0, 'SL': 29, 'VL': 24, 'HH': 40, 'SH': 255, 'VH': 255}        
 
 # Setup window
 PATH_TO_ICON = os.path.dirname(__file__) + '/Externals/icons/politoIcon.ico'
@@ -43,6 +55,7 @@ imageWin = None
 fig, (ax1, ax2) = plt.subplots(1, 2, figsize=(10, 5))
 plt.subplots_adjust(bottom=0.25)
 fig.canvas.mpl_connect("close_event", lambda event: handle_close(event, cap))
+fig.canvas.mpl_connect('key_press_event', on_press)
 plt.get_current_fig_manager().window.setWindowIcon(QtGui.QIcon(PATH_TO_ICON))
 plt.get_current_fig_manager().set_window_title('HSV Custom Profile Generator')
 title_obj = plt.title('HSV Custom Profile Generator')
@@ -99,16 +112,3 @@ while cap.isOpened():
         threshWin.set_data(thresh)
         fig.canvas.draw()
         fig.canvas.flush_events() 
-    
-    if cv2.waitKey(1) & 0xFF == ord('q'):
-        cap.release()
-        plt.close('all')
-        break
-    elif cv2.waitKey(1) & 0xFF == ord('e'):
-        cap.release()
-        file = open("Config\config.dat", "w")
-        configToStr = repr(config)
-        file.write(configToStr + "\n")
-        file.close()
-        plt.close('all')
-        break
