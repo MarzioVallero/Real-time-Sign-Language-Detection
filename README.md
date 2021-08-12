@@ -60,10 +60,15 @@ To run the sign detection algorithm, either refer to the Jupyter notebook [SignD
 python SignDetection.py
 ```
 The script recognizes all the letters in the standard Italian alphabet, plus four special control gestures which are registered as specific couples of characters detected in quick succession:
-- space: Do an "A" gesture followed by an "S" gesture. Simply quicky move your thumb out from the A position.
-- delete: Do a "V" gesture followed by a "U" gesture. Similar to the metaphorical action of "cutting".
-- clear: Do an "E" gesture followed by an "A" gesture. Similar to the action of crushing something with your hand.
-- enter: Do a "D" gesture followed by an "O" gesture. Similar to the action of clicking a camera's shutter button.
+- space: Do an "A" gesture followed by an "S" gesture. Simply quicky move your thumb out from the A position. Appends a space to the active string buffer.
+- delete: Do a "V" gesture followed by a "U" gesture. Similar to the metaphorical action of "cutting". Deletes the last character in the active string buffer.
+- clear: Do an "E" gesture followed by an "A" gesture. Similar to the action of crushing something with your hand. Deletes all the characters in the active string buffer.
+- enter: Do a "D" gesture followed by an "O" gesture. Similar to the action of clicking a camera's shutter button. Prints the active string buffer to stdout, then deletes all the characters in the active string buffer.
+
+Moreover, the [SignDetection.ipynb](SignDetection.ipynb) can be run passing as argument "--Debug", which inserts in the output frames the facial feature recognition dots, eye circles and gaze direction vectors:
+```bash
+python SignDetection.py --Debug
+```
 
 ## Contributing
 Contribution to the project is welcome, although the project won't be maintained in the future by the development team.
