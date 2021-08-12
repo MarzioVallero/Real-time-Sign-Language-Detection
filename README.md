@@ -59,6 +59,11 @@ To run the sign detection algorithm, either refer to the Jupyter notebook [SignD
 ```bash
 python SignDetection.py
 ```
+The script recognizes all the letters in the standard Italian alphabet, plus four special control gestures which are registered as specific couples of characters detected in quick succession:
+- space: Do an "A" gesture followed by an "S" gesture. Simply quicky move your thumb out from the A position.
+- delete: Do a "V" gesture followed by a "U" gesture. Similar to the metaphorical action of "cutting".
+- clear: Do an "E" gesture followed by an "A" gesture. Similar to the action of crushing something with your hand.
+- enter: Do a "D" gesture followed by an "O" gesture. Similar to the action of clicking a camera's shutter button.
 
 ## Contributing
 Contribution to the project is welcome, although the project won't be maintained in the future by the development team.
