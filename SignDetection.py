@@ -100,6 +100,13 @@ def draw_sticker(src, offset, pupils, landmarks,
 def handle_close(event, cap):
     cap.release()
 
+# Keyboard interrupt handler
+def on_press(event):
+    if event.key == 'q':
+        print("You pressed " + event.key + ", the program exited")
+        cap.release()
+        plt.close('all')
+
 args = sys.argv[1:]
 if(len(args) == 0):
     debug = False
@@ -118,6 +125,10 @@ CHECKPOINT_PATH = MODEL_PATH+'/my_ssd_mobnet/'
 PATH_TO_ICON = os.path.dirname(__file__) + '/Externals/icons/politoIcon.ico'
 SIN_LEFT_THETA = 2 * sin(pi / 4)
 SIN_UP_THETA = sin(pi / 6)
+specialGestures = {"space" : ("A", "S"),
+                "delete" : ("V", "U"),
+                "clear" : ("E", "A"),
+                "enter" : ("D", "O")}
 
 # Load the pipeline.config file and build a detection model
 configs = config_util.get_configs_from_pipeline_file(CONFIG_PATH)
@@ -140,6 +151,7 @@ screen_height = root.winfo_screenheight()
 plt.ion()
 gui = plt.figure("Real-time Sign Detection", facecolor='#1e1e1e', edgecolor='#1e1e1e')
 gui.canvas.mpl_connect("close_event", lambda event: handle_close(event, cap))
+gui.canvas.mpl_connect('key_press_event', on_press)
 result = None
 plt.get_current_fig_manager().window.setWindowIcon(QtGui.QIcon(PATH_TO_ICON))
 title_obj = plt.title('Real-time Sign Detection')
@@ -150,6 +162,13 @@ fd = MxnetDetectionModel("Externals/weights/16and32", 0, .6, gpu=-1)
 fa = CoordinateAlignmentModel('Externals/weights/2d106det', 0, gpu=-1)
 gs = IrisLocalizationModel("Externals/weights/iris_landmark.tflite")
 hp = HeadPoseEstimator("Externals/weights/object_points.npy", cap.get(3), cap.get(4))
+
+# input buffers
+currentLetter = ("", 0)
+previousLetter = ""
+buffer = ""
+text_kwargs = dict(size=20, ha="center", va="baseline", bbox=dict(boxstyle="round", ec=('#d4d4d4'), fc=('#1e1e1e')), color=('#d4d4d4'))
+text = plt.text(int(width*.5), height, buffer, **text_kwargs)
 
 # Check if a configuration file exists, else load a predefined value set
 if os.path.isfile('Config\config.dat'):
@@ -264,6 +283,7 @@ while cap.isOpened():
         output = cv2.bitwise_and(frame, frame, mask = totalMask)
             
         # The masked image is then converted to a tensor for object detection
+        # The detections dictionary is formatted according to the objectdetectionAPI
         input_tensor = tf.convert_to_tensor(np.expand_dims(output, 0), dtype=tf.float32)
         detections = detect_fn(input_tensor)
         num_detections = int(detections.pop('num_detections'))
@@ -289,10 +309,48 @@ while cap.isOpened():
                     min_score_thresh=.7,
                     agnostic_mode=False)
 
-    # The output is displayed on an interactive window
-    #cv2.imshow('object detection',  image_np)
-    #cv2.imshow('Masked image', output)
+    # Process detected gestures
+    for index, val in enumerate(detections['detection_scores']):
+        if(val > 0.7):
+            det = category_index[detections['detection_classes'][index]+label_id_offset]['name']
+            if (currentLetter[0] == ""):
+                currentLetter = (det, 1)
+            elif (currentLetter[0] == det):
+                currentLetter = (det, currentLetter[1]+1)
+            else:
+                previousLetter = currentLetter[0]
+                currentLetter = (det, 1)
+            
+            if (previousLetter == specialGestures["delete"][0] and currentLetter[0] == specialGestures["delete"][1]):
+                buffer = buffer[:-1]
+                previousLetter = ""
+                currentLetter = ("", 0)
+            elif (previousLetter == specialGestures["space"][0] and currentLetter[0] == specialGestures["space"][1]):
+                buffer += " "
+                previousLetter = ""
+                currentLetter = ("", 0)
+            elif (previousLetter == specialGestures["clear"][0] and currentLetter[0] == specialGestures["clear"][1]):
+                buffer = ""
+                previousLetter = ""
+                currentLetter = ("", 0)
+            elif (previousLetter == specialGestures["enter"][0] and currentLetter[0] == specialGestures["enter"][1]):
+                print(buffer)
+                buffer = ""
+                previousLetter = ""
+                currentLetter = ("", 0)
+            elif (currentLetter[1] == 5):
+                buffer += det
+                previousLetter = ""
+                currentLetter = ("", 0)
+        else:
+            previousLetter = ""
+            currentLetter = ("", 0)
+        break
+        
+    # Septup window text
+    text.set_text(buffer)
 
+    # The output is displayed on an interactive window
     image_np = cv2.cvtColor(image_np, cv2.COLOR_BGR2RGB)
     if result is None:
         plt.axis("off")
@@ -303,9 +361,3 @@ while cap.isOpened():
         result.set_data(image_np)
         gui.canvas.draw()
         gui.canvas.flush_events()
-    
-    if cv2.waitKey(1) & 0xFF == ord('q'):
-        cap.release()
-        gui.canvas.flush_events()
-        plt.close('all')
-        break
