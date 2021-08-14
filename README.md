@@ -4,6 +4,7 @@ Real-time Sign Language Detection is a Python based project that provides all th
 The input of gestures is only considered valid if a face is detected withing the image frame containing the gesture, else the input is ignored.
 
 Here's a quick demo of the SignDetection.py script:  
+
 https://user-images.githubusercontent.com/73691795/129217755-e0e2e49b-19cd-46df-ad59-bc2dc5acc473.mp4
 
 ## Installation
