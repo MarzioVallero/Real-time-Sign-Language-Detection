@@ -179,12 +179,17 @@ The norm of the two gaze vectors equals zero when the user stares directly into 
 The previously trained model is thus used to detect hand signs in image frames, however we must try to reduce input error as much as possible.
 During the initial testing phase, we noticed that the trained model had some difficulties in correctly identifying the hand due to the detection noise from the background other objects and varaible ambient illumination during the day or from different angles. We thus applied a first step consisting in a double masking approach: the frame is HSV thresolded for skin-toned pixels, then an Haar cascade detection algorithm is used to detect a bounding box for the faces in the frame and removing them.\linebreak
 However, variable illumination conditions and skin tones required a broader HSV filter, which still let trough too much noise. In order to address this issue, we included an additional \textit{\hyperref[https://github.com/MarzioVallero/Real-time-Sign-Language-Detection/blob/master/CreateHSVProfile.py]{interactive script CreateHSVProfile.py}}, available also in Notebook form, that lets the user create a custom HSV thresolding profile, which are automatically saved in a configuration file \textit{config.dat} and loaded in by the \textit{\hyperref[https://github.com/MarzioVallero/Real-time-Sign-Language-Detection/blob/master/SignDetection.py]{SignDetection.py}}. If no config.dat file is found, a temporary dictionary with statistically relevant default values is used instead.\linebreak
+\begin{figure}[!h]
+    \centering
+    \includegraphics[width=0.5\textwidth]{ComputerVisionReport/resources/image/hsvProfile.PNG} \caption{The interactive custom HSV profile script, with range sliders for the Hue, Saturation and Value parameters.} \label{fig:sign}
+\end{figure}
+
 The gaze detection network is then fed with the original not-masked frame input, producing two 2D eye gaze direction vectors, on for each eye. If the norm of the gaze vectors is collectively smaller than a certain threshold, it means that the user is looking towards the camera. If the user looks away for more than five consecutive frames, or no user is detected, the sign detection is suspended until a user looking towards the camera is detected again.\linebreak
 If the gaze detection step is passed, the sign detection neural network is invoked, passing as argument the previously masked frame. The network outputs a structure, containing an array of tuples (label, accuracy) and other arrays, alongside which one accounts for the bounding box coordinates of each detected sign.\linebreak
 If a gesture is kept stable for five frames, it's added to the output string buffer. In order to improve the software's input capabilities, specific temporal combinations of basic signs have been set up to be recognized as special actions to be used as additional means of interaction. This reduces the stress on the neural network's side, reducing the chance of sign prediction error, other than avoiding the addition of extra non-standard gestures for the user to learn. The sign combinations have been chosen to be easy to perform and logically coherent with the action they represent.\linebreak
 At last, the resulting output and string buffer are displayed on a window through the \textit{matplotlib} python library.
 
-\section{Results and Analysis}
+\section{Results Analysis}
 \label{ResutsAndAnalysis}
 The result of our work is a software capable of detecting in real time the Italian Sign Alphabet [figure \ref{fig:sign}] if it actively finds a user trying to interact with it. It accomplishes its goal of being a reliable mean of interaction, as the user can input any character plus and additional set of special actions.\linebreak
 The currently provided network is a right hand trained model, able to recognize static gestures. Using left-handed gestures may incur in aliasing problems.
@@ -248,11 +253,11 @@ However, we refused to stop and kept on trying.
 At the end of development, we were glad of what we had accomplished. We understood that Computer Vision can pave the way for better means of interaction between humans and machines.\linebreak
 We hope that machines will have the chance to improve humanity's tomorrow.
 
+\onecolumn
 \section{Acknowledgments}
 \label{Acks}
 The project has been developed for the Computer Engineering Masters Degree exam Image Processing and Computer Vision, taught by professors B. Montrucchio and L. De Russis, during the a.y. 2020/2021 at the Polythecnic of Turin.
 
-\onecolumn
 \section{References}
 \label{References}
 \begin{flushleft}
