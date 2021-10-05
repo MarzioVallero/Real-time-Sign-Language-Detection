@@ -78,7 +78,7 @@ Contribution to the project is welcome, although the project won't be maintained
 
 ## Authors and Acknowledgement
 
-The project has been developed by Angela D'Antonio, Federica Moro and Marzio Vallero as part of the [Computer Engineering Masters Degree](https://didattica.polito.it/pls/portal30/sviluppo.offerta_formativa.corsi?p_sdu_cds=37:18&p_lang=EN) exam [Image Processing and Computer Vision](https://didattica.polito.it/pls/portal30/gap.pkg_guide.viewGap?p_cod_ins=01TUJOV&p_a_acc=2021), taught by professors B. Montrucchio and L. De Russis, during the academic year 2020/2021 at the [Polythecnic of Turin](https://www.polito.it/).
+The project has been developed by Angela D'Antonio, Federica Moro and Marzio Vallero as part of the [Computer Engineering Masters Degree](https://didattica.polito.it/pls/portal30/sviluppo.offerta_formativa.corsi?p_sdu_cds=37:18&p_lang=EN) exam [Image Processing and Computer Vision](https://didattica.polito.it/pls/portal30/gap.pkg_guide.viewGap?p_cod_ins=01TUJOV&p_a_acc=2021), taught by professors B. Montrucchio and L. De Russis, during the academic year 2020/2021 at the [Politecnico di Torino University](https://www.polito.it/).
 
 ## License
 For right to use, copyright and warranty of this software, refer to this project's [License](License.md).
